@@ -274,6 +274,7 @@ export class McpServer {
         // Surfaces a one-time note in the next response after a reconnect.
         reconnected: this.#context !== undefined,
         categoryExtensions: this.#serverArgs.categoryExtensions,
+        maxTabs: this.#serverArgs.maxTabs,
         onNotification: (message: string) => {
           void this.server
             .sendLoggingMessage({

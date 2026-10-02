@@ -102,7 +102,7 @@ export const closePage = defineTool(() => ({
 export const newPage = defineTool((args: ParsedArguments) => {
   return {
     name: 'new_page',
-    description: `Open a new tab and load a URL. Use project URL if not specified otherwise.`,
+    description: `Open a new tab and load a URL. Use project URL if not specified otherwise.${args?.maxTabs ? ` At most ${args.maxTabs} pages may be open; the oldest non-selected page is auto-closed beyond that.` : ''}`,
     annotations: {
       category: ToolCategory.NAVIGATION,
       readOnlyHint: false,

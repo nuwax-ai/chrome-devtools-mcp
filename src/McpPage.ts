@@ -121,6 +121,10 @@ function isBackendNodeId(
 export class McpPage implements ContextPage {
   readonly target: Target;
   readonly id: number;
+  // Wall-clock creation time used to pick the oldest page when --maxTabs
+  // forces an eviction. Captured synchronously in the constructor so the
+  // ordering is race-free.
+  readonly createdAt: number;
 
   #pptrPage?: Page;
   #initPromise?: Promise<void>;
@@ -174,6 +178,7 @@ export class McpPage implements ContextPage {
     this.#onNotification = options.onNotification;
     this.target = target;
     this.id = id;
+    this.createdAt = Date.now();
     this.isolatedContextName = options.isolatedContextName;
     this.#dialogHandler = (dialog: Dialog): void => {
       this.#dialog = dialog;

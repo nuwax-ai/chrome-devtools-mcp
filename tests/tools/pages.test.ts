@@ -685,6 +685,61 @@ describe('pages', () => {
     });
   });
 
+  describe('new_page with maxTabs', () => {
+    it('auto-closes the oldest page and surfaces a notice in the response', async () => {
+      await withMcpContext(
+        async (response, context, args) => {
+          // Page 1 (about:blank) is open and selected; create page 2.
+          await context.newPage();
+
+          // Creating page 3 exceeds maxTabs=2 and evicts page 1.
+          await newPage(args).handler(
+            {params: {url: 'data:text/html,<html></html>'}},
+            response,
+            context,
+          );
+
+          const result = await response.handle(context);
+          const textContent = result.content.find(c => c.type === 'text');
+          assert.ok(textContent && textContent.type === 'text');
+          assert.match(
+            textContent.text,
+            /Note: auto-closed page 1 \(about:blank\) to enforce --maxTabs=2\./,
+          );
+          assert.match(
+            JSON.stringify(result.structuredContent),
+            /auto-closed page 1 \(about:blank\) to enforce --maxTabs=2/,
+          );
+          assert.strictEqual(context.getPages().length, 2);
+        },
+        {maxTabs: 2},
+      );
+    });
+
+    it('does not evict when within the limit', async () => {
+      await withMcpContext(
+        async (response, context, args) => {
+          await newPage(args).handler(
+            {params: {url: 'data:text/html,<html></html>'}},
+            response,
+            context,
+          );
+
+          const result = await response.handle(context);
+          const textContent = result.content.find(c => c.type === 'text');
+          assert.ok(textContent && textContent.type === 'text');
+          assert.doesNotMatch(textContent.text, /auto-closed/);
+          assert.doesNotMatch(
+            JSON.stringify(result.structuredContent),
+            /autoClosedPages/,
+          );
+          assert.strictEqual(context.getPages().length, 2);
+        },
+        {maxTabs: 5},
+      );
+    });
+  });
+
   describe('close_page', () => {
     it('closes a page', async () => {
       await withMcpContext(async (response, context, args) => {

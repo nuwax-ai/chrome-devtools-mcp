@@ -404,6 +404,102 @@ describe('McpContext', () => {
     });
   });
 
+  it('auto-closes the oldest page when maxTabs is exceeded', async () => {
+    await withBrowser(async browser => {
+      const context = await McpContext.from(
+        browser,
+        undefined,
+        {
+          experimentalDevToolsDebugging: false,
+          performanceCrux: false,
+          maxTabs: 2,
+        },
+        Locator,
+      );
+      try {
+        const oldest = context.getSelectedMcpPage();
+        const second = await context.newPage();
+        assert.strictEqual(context.getPages().length, 2);
+
+        const third = await context.newPage();
+        assert.strictEqual(context.getPages().length, 2);
+        assert.ok(oldest.isClosed(), 'oldest page was auto-closed');
+        assert.deepStrictEqual(
+          context.getPages().map(page => page.id),
+          [second.id, third.id],
+        );
+        assert.deepStrictEqual(context.consumeAutoClosedPageNotices(), [
+          `Note: auto-closed page ${oldest.id} (about:blank) to enforce --maxTabs=2.`,
+        ]);
+        assert.deepStrictEqual(context.consumeAutoClosedPageNotices(), []);
+      } finally {
+        context.dispose();
+      }
+    });
+  });
+
+  it('allows exceeding maxTabs when no page is evictable', async () => {
+    await withBrowser(async browser => {
+      const context = await McpContext.from(
+        browser,
+        undefined,
+        {
+          experimentalDevToolsDebugging: false,
+          performanceCrux: false,
+          maxTabs: 1,
+        },
+        Locator,
+      );
+      try {
+        // The pre-existing page is selected and the new page is protected as
+        // just-created, so nothing can be evicted.
+        const selected = context.getSelectedMcpPage();
+        await context.newPage();
+        assert.strictEqual(context.getPages().length, 2);
+        assert.ok(!selected.isClosed(), 'selected page survives');
+        const notices = context.consumeAutoClosedPageNotices();
+        assert.strictEqual(notices.length, 1);
+        assert.match(
+          notices[0],
+          /2 pages are open, exceeding --maxTabs=1, but no closable page was available\./,
+        );
+      } finally {
+        context.dispose();
+      }
+    });
+  });
+
+  it('does not auto-close pre-existing pages discovered at connect', async () => {
+    await withBrowser(async browser => {
+      // Two tabs already exist before the context connects.
+      await browser.newPage();
+      const context = await McpContext.from(
+        browser,
+        undefined,
+        {
+          experimentalDevToolsDebugging: false,
+          performanceCrux: false,
+          maxTabs: 2,
+        },
+        Locator,
+      );
+      try {
+        assert.strictEqual(context.getPages().length, 2);
+        assert.deepStrictEqual(context.consumeAutoClosedPageNotices(), []);
+
+        const selected = context.getSelectedMcpPage();
+        await context.newPage();
+        assert.strictEqual(context.getPages().length, 2);
+        assert.ok(!selected.isClosed(), 'selected pre-existing page survives');
+        const notices = context.consumeAutoClosedPageNotices();
+        assert.strictEqual(notices.length, 1);
+        assert.match(notices[0], /auto-closed page \d+ \(about:blank\)/);
+      } finally {
+        context.dispose();
+      }
+    });
+  });
+
   it('disposes loaded heap snapshots on teardown', async () => {
     await withMcpContext(async (_response, context) => {
       const filePath = path.join(

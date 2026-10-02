@@ -156,6 +156,10 @@ The Chrome DevTools MCP server supports the following configuration option:
   - **Type:** boolean
   - **Default:** `true`
 
+- **`--maxTabs`/ `--max-tabs`**
+  Maximum number of open pages (tabs). When opening a new page would exceed this limit, the oldest non-selected, non-extension, non-DevTools page is auto-closed. Unset means no limit.
+  - **Type:** number
+
 - **`--experimentalDevtools`/ `--experimental-devtools`**
   Whether to enable automation over DevTools targets
   - **Type:** boolean

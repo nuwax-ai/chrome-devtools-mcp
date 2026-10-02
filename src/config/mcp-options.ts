@@ -31,6 +31,22 @@ export const mcpOptions = {
       'Require pageId on page-scoped tools and route requests by page ID (useful for concurrent agent sessions). Use --no-page-id-routing to disable.',
     default: true,
   },
+  maxTabs: {
+    type: 'number',
+    describe:
+      'Maximum number of open pages (tabs). When opening a new page would exceed this limit, the oldest non-selected, non-extension, non-DevTools page is auto-closed. Unset means no limit.',
+    coerce: (value: number | undefined) => {
+      if (value === undefined) {
+        return;
+      }
+      if (!Number.isInteger(value) || value <= 0) {
+        throw new Error(
+          `Invalid maxTabs ${value}. Expected a positive integer.`,
+        );
+      }
+      return value;
+    },
+  },
   devtoolsComments: {
     type: 'boolean',
     describe:

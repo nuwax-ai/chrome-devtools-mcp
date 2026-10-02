@@ -75,6 +75,10 @@ interface McpContextOptions {
   navigationTimeout?: number;
   // Whether extension tools and targets are enabled.
   categoryExtensions?: boolean;
+  // Maximum number of open pages (tabs). When a new page pushes the count
+  // above this limit, the oldest non-protected page is auto-closed. Unset
+  // means no limit.
+  maxTabs?: number;
   // Callback when a notification should be emitted to MCP client.
   onNotification?: (message: string) => void;
 }
@@ -109,6 +113,13 @@ export class McpContext implements Context {
     null;
 
   #reconnectNotice = false;
+
+  // Notices for pages auto-closed to enforce --maxTabs, surfaced in the next
+  // response (and pushed via onNotification when available).
+  #autoClosedPageNotices: string[] = [];
+  // Serializes --maxTabs enforcement so concurrent targetcreated events
+  // cannot race each other into double evictions.
+  #maxTabsEnforceChain: Promise<void> = Promise.resolve();
 
   #traceResults: TraceResult[] = [];
 
@@ -174,7 +185,8 @@ export class McpContext implements Context {
       if (!this.#isPageTarget(target)) {
         return;
       }
-      this.#createMcpPage(target);
+      const mcpPage = this.#createMcpPage(target);
+      void this.#enforceMaxTabs(mcpPage);
     } catch (err) {
       this.logger?.('Error handling targetcreated', err);
     }
@@ -340,6 +352,9 @@ export class McpContext implements Context {
     }
     const mcpPage = this.#createMcpPage(page.target());
     await mcpPage.init();
+    // Evict before selecting so the notice is deterministic and the new page
+    // never becomes the eviction target.
+    await this.#enforceMaxTabs(mcpPage);
     this.selectPage(mcpPage);
     await this.createPagesSnapshot();
     return mcpPage;
@@ -351,6 +366,91 @@ export class McpContext implements Context {
     const page = this.getPageById(pageId);
     this.#mcpPages.delete(page.target);
     await page.close();
+  }
+
+  // Enforces --maxTabs by evicting pages over the limit. Serialized through
+  // #maxTabsEnforceChain so concurrent callers (e.g. a burst of
+  // targetcreated events) take turns instead of double-evicting.
+  #enforceMaxTabs(createdPage?: McpPage): Promise<void> {
+    if (this.#options.maxTabs === undefined) {
+      return Promise.resolve();
+    }
+    const run = this.#maxTabsEnforceChain.then(() =>
+      this.#evictPagesOverLimit(createdPage),
+    );
+    this.#maxTabsEnforceChain = run;
+    return run;
+  }
+
+  // Never throws: call sites are fire-and-forget or best-effort. On failure
+  // the run stops and the next page creation retries enforcement.
+  async #evictPagesOverLimit(createdPage: McpPage | undefined): Promise<void> {
+    const maxTabs = this.#options.maxTabs;
+    if (maxTabs === undefined) {
+      return;
+    }
+    try {
+      while (this.#mcpPages.size > maxTabs) {
+        const candidate = this.#pickEvictablePage(createdPage);
+        if (!candidate) {
+          const message = `Note: ${this.#mcpPages.size} pages are open, exceeding --maxTabs=${maxTabs}, but no closable page was available.`;
+          this.#recordAutoCloseNotice(message);
+          this.logger?.(message);
+          return;
+        }
+        const url = candidate.url();
+        await this.closePage(candidate.id);
+        this.#recordAutoCloseNotice(
+          `Note: auto-closed page ${candidate.id} (${url}) to enforce --maxTabs=${maxTabs}.`,
+        );
+      }
+    } catch (err) {
+      this.logger?.(`Error enforcing --maxTabs=${maxTabs}`, err);
+    }
+  }
+
+  // The oldest evictable page by creation time (tie-break: lowest id),
+  // skipping the just-created page, the selected page, closed pages, and
+  // chrome-extension:// / devtools:// pages. All predicates are safe on
+  // not-yet-initialized pages.
+  #pickEvictablePage(createdPage: McpPage | undefined): McpPage | undefined {
+    let candidate: McpPage | undefined;
+    for (const mcpPage of this.#mcpPages.values()) {
+      if (mcpPage === createdPage || mcpPage === this.#selectedPage) {
+        continue;
+      }
+      if (mcpPage.isClosed()) {
+        continue;
+      }
+      const url = mcpPage.url();
+      if (
+        url.startsWith('chrome-extension://') ||
+        url.startsWith('devtools://')
+      ) {
+        continue;
+      }
+      if (
+        !candidate ||
+        mcpPage.createdAt < candidate.createdAt ||
+        (mcpPage.createdAt === candidate.createdAt && mcpPage.id < candidate.id)
+      ) {
+        candidate = mcpPage;
+      }
+    }
+    return candidate;
+  }
+
+  // Dedupes consecutive identical messages: one page creation can trigger
+  // enforcement twice (targetcreated event + the awaited newPage call) and
+  // both runs report the same over-limit state.
+  #recordAutoCloseNotice(message: string): void {
+    const last =
+      this.#autoClosedPageNotices[this.#autoClosedPageNotices.length - 1];
+    if (last === message) {
+      return;
+    }
+    this.#autoClosedPageNotices.push(message);
+    this.#options.onNotification?.(message);
   }
 
   get #hasNetworkBlockOrAllowlist(): boolean {
@@ -475,6 +575,16 @@ export class McpContext implements Context {
     const notice = this.#reconnectNotice;
     this.#reconnectNotice = false;
     return notice;
+  }
+
+  /**
+   * Returns notices for pages auto-closed to enforce --maxTabs since the
+   * last call, so the next response can surface them. Cleared on first call.
+   */
+  consumeAutoClosedPageNotices(): string[] {
+    const notices = this.#autoClosedPageNotices;
+    this.#autoClosedPageNotices = [];
+    return notices;
   }
 
   getPageById(pageId: number): McpPage {

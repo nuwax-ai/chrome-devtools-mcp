@@ -180,6 +180,7 @@ export async function withMcpContext(
     allowedUrlPattern?: string[];
     allowUnrestrictedPaths?: boolean;
     navigationTimeout?: number;
+    maxTabs?: number;
   } = {},
   args: Partial<ParsedArguments> = {},
 ) {
@@ -206,6 +207,7 @@ export async function withMcpContext(
           options.navigationTimeout ??
           (process.platform === 'win32' ? 20000 : undefined),
         categoryExtensions: parsedArgs.categoryExtensions,
+        maxTabs: options.maxTabs,
       },
       Locator,
     );

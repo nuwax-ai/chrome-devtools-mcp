@@ -148,6 +148,27 @@ describe('cli args parsing', () => {
     });
   });
 
+  it('parses maxTabs', async () => {
+    const args = parseConfig(['--maxTabs', '2']);
+    assert.strictEqual(args.maxTabs, 2);
+
+    const kebabCaseArgs = parseConfig(['--max-tabs=3']);
+    assert.strictEqual(kebabCaseArgs.maxTabs, 3);
+  });
+
+  it('rejects invalid maxTabs values', async () => {
+    const coerce = mcpOptions.maxTabs.coerce;
+    assert.ok(coerce);
+    assert.strictEqual(coerce(undefined), undefined);
+    assert.strictEqual(coerce(5), 5);
+    for (const value of [0, -1, 2.5, Number.NaN]) {
+      assert.throws(
+        () => coerce(value),
+        /Invalid maxTabs .* Expected a positive integer\./,
+      );
+    }
+  });
+
   it('parses chrome args', async () => {
     const args = parseConfig([
       `--chrome-arg='--no-sandbox'`,

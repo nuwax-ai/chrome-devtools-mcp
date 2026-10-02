@@ -866,6 +866,7 @@ export class McpResponse implements Response {
       webmcpTools?: object[];
       message?: string;
       reconnected?: boolean;
+      autoClosedPages?: string[];
       networkConditions?: string;
       navigationTimeout?: number;
       viewport?: object;
@@ -940,6 +941,11 @@ export class McpResponse implements Response {
       response.push(
         `Note: the browser was restarted or reconnected since the last call. Page ids have changed. Call ${listPages(this.#args).name} to see open pages.`,
       );
+    }
+    const autoClosedPageNotices = context.consumeAutoClosedPageNotices() ?? [];
+    if (autoClosedPageNotices.length) {
+      structuredContent.autoClosedPages = autoClosedPageNotices;
+      response.push(...autoClosedPageNotices);
     }
     if (this.#textResponseLines.length) {
       structuredContent.message = this.#textResponseLines.join('\n');
