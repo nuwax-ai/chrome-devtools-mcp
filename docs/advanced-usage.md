@@ -13,7 +13,7 @@ each session can route tool calls to the tab it is working with. Use
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
     }
   }
 }
@@ -74,7 +74,7 @@ The following code snippet is an example configuration for gemini-cli:
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["chrome-devtools-mcp@latest", "--autoConnect"]
+      "args": ["@nuwax-ai/chrome-devtools-mcp@latest", "--autoConnect"]
     }
   }
 }
@@ -114,7 +114,7 @@ Add the `--browser-url` option to your MCP client configuration. The value of th
     "chrome-devtools": {
       "command": "npx",
       "args": [
-        "chrome-devtools-mcp@latest",
+        "@nuwax-ai/chrome-devtools-mcp@latest",
         "--browser-url=http://127.0.0.1:9222"
       ]
     }

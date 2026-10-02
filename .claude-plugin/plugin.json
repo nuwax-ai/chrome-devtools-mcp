@@ -6,7 +6,7 @@
     "chrome-devtools": {
       "command": "npx",
       "args": [
-        "chrome-devtools-mcp@1.10.1"
+        "@nuwax-ai/chrome-devtools-mcp@1.10.1"
       ]
     }
   }

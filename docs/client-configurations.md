@@ -9,7 +9,7 @@ When adding a new client configuration, make sure to add it in alphabetical orde
   Follow https://ampcode.com/manual#mcp and use the config provided above. You can also install the Chrome DevTools MCP server using the CLI:
 
 ```bash
-amp mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+amp mcp add chrome-devtools -- npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 </details>
@@ -26,7 +26,7 @@ To use the Chrome DevTools MCP server follow the instructions from <a href="http
       "command": "npx",
       "args": [
         "-y",
-        "chrome-devtools-mcp@latest",
+        "@nuwax-ai/chrome-devtools-mcp@latest",
         "--browser-url=http://127.0.0.1:9222"
       ]
     }
@@ -52,7 +52,7 @@ Follow the <a href="https://bob.ibm.com/docs/ide/configuration/mcp/mcp-in-bob">I
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
     }
   }
 }
@@ -70,7 +70,7 @@ You can edit these files from **Bob panel → Settings → MCP → Edit Global M
 Use the Claude Code CLI to add the Chrome DevTools MCP server (<a href="https://code.claude.com/docs/en/mcp">guide</a>):
 
 ```bash
-claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest
+claude mcp add chrome-devtools --scope user npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 **Install as a Plugin (MCP + Skills)**
@@ -108,7 +108,7 @@ Restart Claude Code to have the MCP server and skills load (check with `/skills`
   using the standard config from above. You can also install the Chrome DevTools MCP server using the Codex CLI:
 
 ```bash
-codex mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+codex mcp add chrome-devtools -- npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 **On Windows 11**
@@ -122,7 +122,7 @@ args = [
     "/c",
     "npx",
     "-y",
-    "chrome-devtools-mcp@latest",
+    "@nuwax-ai/chrome-devtools-mcp@latest",
 ]
 env = { SystemRoot="C:\\Windows", PROGRAMFILES="C:\\Program Files" }
 startup_timeout_ms = 20_000
@@ -136,7 +136,7 @@ startup_timeout_ms = 20_000
 Use the Command Code CLI to add the Chrome DevTools MCP server (<a href="https://commandcode.ai/docs/mcp">MCP guide</a>):
 
 ```bash
-cmd mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest
+cmd mcp add chrome-devtools --scope user npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 </details>
@@ -160,7 +160,7 @@ Configure the following fields and press `CTRL+S` to save the configuration:
 
 - **Server name:** `chrome-devtools`
 - **Server Type:** `[1] Local`
-- **Command:** `npx -y chrome-devtools-mcp@latest`
+- **Command:** `npx -y @nuwax-ai/chrome-devtools-mcp@latest`
 
 </details>
 
@@ -228,7 +228,7 @@ Go to `Cursor Settings` -> `MCP` -> `New MCP Server`. Use the config provided ab
 Use the Devin CLI to add the Chrome DevTools MCP server (<a href="https://docs.devin.ai/cli/extensibility/mcp/configuration">guide</a>):
 
 ```bash
-devin mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+devin mcp add chrome-devtools -- npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 </details>
@@ -238,7 +238,7 @@ devin mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
 Use the Factory CLI to add the Chrome DevTools MCP server (<a href="https://docs.factory.ai/cli/configuration/mcp">guide</a>):
 
 ```bash
-droid mcp add chrome-devtools "npx -y chrome-devtools-mcp@latest"
+droid mcp add chrome-devtools "npx -y @nuwax-ai/chrome-devtools-mcp@latest"
 ```
 
 </details>
@@ -250,10 +250,10 @@ To connect [FLUJO](https://flujo.com.co/) to an existing Chrome instance, first
 [start Chrome with remote debugging enabled](./advanced-usage.md#manual-connection-using-port-forwarding).
 Use the debugging port from that setup in the argument below.
 
-1. With Node.js installed, run `npm install chrome-devtools-mcp@latest` in a local directory.
+1. With Node.js installed, run `npm install @nuwax-ai/chrome-devtools-mcp@latest` in a local directory.
 2. In FLUJO, open **Connected Apps > Connect App > I'm an expert > Configure & Test**.
 3. Set **Server name** to `chrome-devtools` and **MCP server root path** to the directory containing the installed package.
-4. Select **Standard IO** and set **Run command** to `npx`. Use **Add argument** to enter `-y`, `chrome-devtools-mcp@latest`, and `--browser-url=http://127.0.0.1:9222` as separate arguments, adjusting the port if needed.
+4. Select **Standard IO** and set **Run command** to `npx`. Use **Add argument** to enter `-y`, `@nuwax-ai/chrome-devtools-mcp@latest`, and `--browser-url=http://127.0.0.1:9222` as separate arguments, adjusting the port if needed.
 5. Click **3) Test run**. After the MCP handshake succeeds, click **Add server**.
 6. Open the saved server's **Tools** tab. Use **Test tool** to call `new_page` with the URL you want to debug, then call `take_snapshot` with the returned page ID to verify browser access.
 
@@ -267,7 +267,7 @@ Install the Chrome DevTools MCP server using the Gemini CLI.
 
 ```bash
 # Either MCP only:
-gemini mcp add chrome-devtools npx chrome-devtools-mcp@latest
+gemini mcp add chrome-devtools npx @nuwax-ai/chrome-devtools-mcp@latest
 # Or as a Gemini extension (MCP+Skills):
 gemini extensions install --auto-update https://github.com/ChromeDevTools/chrome-devtools-mcp
 ```
@@ -275,7 +275,7 @@ gemini extensions install --auto-update https://github.com/ChromeDevTools/chrome
 **Globally:**
 
 ```bash
-gemini mcp add -s user chrome-devtools npx chrome-devtools-mcp@latest
+gemini mcp add -s user chrome-devtools npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 Alternatively, follow the <a href="https://github.com/google-gemini/gemini-cli/blob/main/docs/tools/mcp-server.md#how-to-set-up-your-mcp-server">MCP guide</a> and use the standard config from above.
@@ -292,7 +292,7 @@ Alternatively, follow the <a href="https://github.com/google-gemini/gemini-cli/b
   <summary>Grok Build CLI</summary>
 
 ```bash
-grok mcp add chrome-devtools npx chrome-devtools-mcp@latest
+grok mcp add chrome-devtools npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 See the <a href="https://docs.x.ai/build/features/skills-plugins-marketplaces">docs</a> for more options
@@ -325,7 +325,7 @@ The Chrome DevTools MCP server can be used with <a href="https://docs.katalon.co
 **Step 2:** Start the Chrome DevTools MCP server with the proxy:
 
 ```bash
-mcp-proxy --transport streamablehttp --port 8080 -- npx -y chrome-devtools-mcp@latest
+mcp-proxy --transport streamablehttp --port 8080 -- npx -y @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 **Note:** You may need to pick another port if 8080 is already in use.
@@ -349,7 +349,7 @@ Add in ~/.vibe/config.toml:
 name = "chrome-devtools"
 transport = "stdio"
 command = "npx"
-args = ["chrome-devtools-mcp@latest"]
+args = ["@nuwax-ai/chrome-devtools-mcp@latest"]
 ```
 
 </details>
@@ -365,7 +365,7 @@ Add the following configuration to your `opencode.json` file. If you don't have 
   "mcp": {
     "chrome-devtools": {
       "type": "local",
-      "command": ["npx", "-y", "chrome-devtools-mcp@latest"]
+      "command": ["npx", "-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
     }
   }
 }
@@ -390,13 +390,13 @@ Install the Chrome DevTools MCP server using the Qoder CLI (<a href="https://doc
 **Project wide:**
 
 ```bash
-qodercli mcp add chrome-devtools -- npx chrome-devtools-mcp@latest
+qodercli mcp add chrome-devtools -- npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 **Globally:**
 
 ```bash
-qodercli mcp add -s user chrome-devtools -- npx chrome-devtools-mcp@latest
+qodercli mcp add -s user chrome-devtools -- npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 </details>

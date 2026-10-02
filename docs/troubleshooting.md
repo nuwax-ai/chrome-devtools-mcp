@@ -2,7 +2,7 @@
 
 ## General tips
 
-- Run `npx chrome-devtools-mcp@latest --help` to test if the MCP server runs on your machine.
+- Run `npx @nuwax-ai/chrome-devtools-mcp@latest --help` to test if the MCP server runs on your machine.
 - Make sure that your MCP client uses the same npm and node version as your terminal.
 - When configuring your MCP client, try using the `--yes` argument to `npx` to
   auto-accept installation prompt.
@@ -14,7 +14,7 @@
 
 Start the MCP server with debugging enabled and a log file:
 
-- `NODE_DEBUG=* npx chrome-devtools-mcp@latest --log-file=/path/to/chrome-devtools-mcp.log`
+- `NODE_DEBUG=* npx @nuwax-ai/chrome-devtools-mcp@latest --log-file=/path/to/chrome-devtools-mcp.log`
 
 Using `.mcp.json` to debug while using a client:
 
@@ -25,7 +25,7 @@ Using `.mcp.json` to debug while using a client:
       "type": "stdio",
       "command": "npx",
       "args": [
-        "chrome-devtools-mcp@latest",
+        "@nuwax-ai/chrome-devtools-mcp@latest",
         "--log-file",
         "/path/to/chrome-devtools-mcp.log"
       ],
@@ -121,7 +121,7 @@ Possible workarounds include:
   "mcpServers": {
       "chrome-devtools": {
         "command": "cmd",
-        "args": ["/c", "npx", "-y", "chrome-devtools-mcp@latest"]
+        "args": ["/c", "npx", "-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
       }
     }
   ```
@@ -134,7 +134,7 @@ Possible workarounds include:
   "mcpServers": {
       "chrome-devtools": {
         "command": "C:\\nvm4w\\nodejs\\npx.ps1",
-        "args": ["-y", "chrome-devtools-mcp@latest"]
+        "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
       }
     }
   ```
@@ -174,7 +174,7 @@ If the plugin marketplace approach fails, you can install `chrome-devtools-mcp`
 as an MCP server directly without cloning the repository:
 
 ```sh
-claude mcp add chrome-devtools --scope user npx chrome-devtools-mcp@latest
+claude mcp add chrome-devtools --scope user npx @nuwax-ai/chrome-devtools-mcp@latest
 ```
 
 This bypasses the git clone entirely and uses npm/npx to fetch the package. Note

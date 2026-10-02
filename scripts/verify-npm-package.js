@@ -14,7 +14,9 @@ function verifyPackageContents() {
     });
     // skip non-JSON output from prepare.
     const data = JSON.parse(output.substring(output.indexOf('{')));
-    const files = data['chrome-devtools-mcp'].files.map(f => f.path);
+    // npm emits a flat object; older versions keyed it by package name.
+    const pkg = data.files ? data : data['@nuwax-ai/chrome-devtools-mcp'];
+    const files = pkg.files.map(f => f.path);
     // Check some important files.
     const requiredPaths = [
       'build/src/index.js',

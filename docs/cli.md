@@ -7,7 +7,7 @@ The `chrome-devtools-mcp` package includes an **experimental** CLI interface tha
 Install the package globally to make the `chrome-devtools` command available:
 
 ```sh
-npm i chrome-devtools-mcp@latest -g
+npm i @nuwax-ai/chrome-devtools-mcp@latest -g
 chrome-devtools status # check if install worked.
 ```
 

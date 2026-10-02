@@ -45,7 +45,7 @@ Google collects usage statistics (such as tool invocation success rates, latency
 Data collection is **enabled by default**. You can opt-out by passing the `--no-usage-statistics` flag when starting the server:
 
 ```json
-"args": ["-y", "chrome-devtools-mcp@latest", "--no-usage-statistics"]
+"args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest", "--no-usage-statistics"]
 ```
 
 Google handles this data in accordance with the [Google Privacy Policy](https://policies.google.com/privacy).
@@ -74,14 +74,14 @@ Add the following config to your MCP client:
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest"]
+      "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest"]
     }
   }
 }
 ```
 
 > [!NOTE]
-> Using `chrome-devtools-mcp@latest` ensures that your MCP client will always use the latest version of the Chrome DevTools MCP server.
+> Using `@nuwax-ai/chrome-devtools-mcp@latest` ensures that your MCP client will always use the latest version of the Chrome DevTools MCP server.
 
 If you are interested in doing only basic browser tasks, use the `--slim` mode:
 
@@ -90,7 +90,7 @@ If you are interested in doing only basic browser tasks, use the `--slim` mode:
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "chrome-devtools-mcp@latest", "--slim", "--headless"]
+      "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest", "--slim", "--headless"]
     }
   }
 }

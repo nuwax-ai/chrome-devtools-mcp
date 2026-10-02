@@ -15,6 +15,7 @@
 
   "packages": {
     ".": {
+      "tag-format": "chrome-devtools-mcp-v${version}",
       "extra-files": [
         {
           "type": "generic",

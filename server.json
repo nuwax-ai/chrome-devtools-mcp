@@ -12,7 +12,7 @@
     {
       "registryType": "npm",
       "registryBaseUrl": "https://registry.npmjs.org",
-      "identifier": "chrome-devtools-mcp",
+      "identifier": "@nuwax-ai/chrome-devtools-mcp",
       "version": "1.10.1",
       "transport": {
         "type": "stdio"

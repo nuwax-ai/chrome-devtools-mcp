@@ -58,7 +58,7 @@ export class ConfigParser {
   buildCliParser(options: Record<string, YargsOptions> = mcpOptions) {
     const yargsInstance = yargs(hideBin(this.argv));
     return yargsInstance
-      .scriptName('npx chrome-devtools-mcp@latest')
+      .scriptName('npx @nuwax-ai/chrome-devtools-mcp@latest')
       .parserConfiguration({
         'strip-aliased': true,
         'strip-dashed': true,
