@@ -30,10 +30,12 @@ export async function checkForUpdates(message: string) {
   }
   isChecking = true;
 
+  // Fork-specific cache directory so version checks don't cross-contaminate
+  // with an upstream chrome-devtools-mcp install on the same machine.
   const cachePath = path.join(
     os.homedir(),
     '.cache',
-    'chrome-devtools-mcp',
+    'nuwax-ai-chrome-devtools-mcp',
     'latest.json',
   );
 

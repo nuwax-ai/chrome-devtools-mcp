@@ -1,8 +1,9 @@
 # Chrome DevTools for agents
 
-[![npm chrome-devtools-mcp package](https://img.shields.io/npm/v/chrome-devtools-mcp.svg)](https://npmjs.org/package/chrome-devtools-mcp)
+[![npm @nuwax-ai/chrome-devtools-mcp package](https://img.shields.io/npm/v/@nuwax-ai/chrome-devtools-mcp.svg)](https://npmjs.com/package/@nuwax-ai/chrome-devtools-mcp)
 
-Chrome DevTools for agents (`chrome-devtools-mcp`) lets your coding agent (such as Antigravity, Claude, Cursor or Copilot)
+Chrome DevTools for agents (`@nuwax-ai/chrome-devtools-mcp`, a community fork of
+`chrome-devtools-mcp`) lets your coding agent (such as Antigravity, Claude, Cursor or Copilot)
 control and inspect a live Chrome browser. It acts as a Model-Context-Protocol
 (MCP) server, giving your AI coding assistant access to the full power of
 Chrome DevTools for reliable automation, in-depth debugging, and performance analysis.
@@ -90,7 +91,12 @@ If you are interested in doing only basic browser tasks, use the `--slim` mode:
   "mcpServers": {
     "chrome-devtools": {
       "command": "npx",
-      "args": ["-y", "@nuwax-ai/chrome-devtools-mcp@latest", "--slim", "--headless"]
+      "args": [
+        "-y",
+        "@nuwax-ai/chrome-devtools-mcp@latest",
+        "--slim",
+        "--headless"
+      ]
     }
   }
 }

@@ -3,7 +3,7 @@
 Install the package globally to make the `chrome-devtools` command available. You only need to do this the first time you use it.
 
 ```sh
-npm i chrome-devtools-mcp@latest -g
+npm i @nuwax-ai/chrome-devtools-mcp@latest -g
 chrome-devtools status # check if install worked.
 ```
 

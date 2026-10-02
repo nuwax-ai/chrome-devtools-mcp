@@ -38,7 +38,10 @@ const cachePath = process.argv[2];
 
 if (cachePath) {
   try {
-    const response = await fetch(`${getRegistry()}/chrome-devtools-mcp/latest`);
+    // encodeURIComponent encodes the scope separator, which the registry
+    // expects for scoped package names.
+    const packageName = encodeURIComponent('@nuwax-ai/chrome-devtools-mcp');
+    const response = await fetch(`${getRegistry()}/${packageName}/latest`);
     const data = response.ok ? await response.json() : null;
 
     if (

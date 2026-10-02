@@ -5,7 +5,7 @@ description: Uses Chrome DevTools via MCP for efficient debugging, troubleshooti
 
 ## Core Concepts
 
-**Browser lifecycle**: Browser starts automatically on first tool call using a persistent Chrome profile. Configure via CLI args in the MCP server configuration: `npx chrome-devtools-mcp@latest --help`.
+**Browser lifecycle**: Browser starts automatically on first tool call using a persistent Chrome profile. Configure via CLI args in the MCP server configuration: `npx @nuwax-ai/chrome-devtools-mcp@latest --help`.
 Addional tooling can be enabled by providing the following flags:
 
 - For extension tooling, use the `--categoryExtensions` flag.
@@ -50,7 +50,7 @@ You can send multiple tool calls in parallel, but maintain correct order: naviga
 >   "mcpServers": {
 >     "chrome-devtools": {
 >       "command": "npx",
->       "args": ["chrome-devtools-mcp@latest", "--categoryExtensions"]
+>       "args": ["@nuwax-ai/chrome-devtools-mcp@latest", "--categoryExtensions"]
 >     }
 >   }
 > }
